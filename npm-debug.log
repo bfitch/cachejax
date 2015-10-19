@@ -1,0 +1,130 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/opt/boxen/nodenv/versions/v0.10.38/bin/node',
+1 verbose cli   '/opt/boxen/nodenv/versions/v0.10.38/bin/npm',
+1 verbose cli   'publish' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.38
+4 verbose publish [ '.' ]
+5 verbose cache add [ '.', null ]
+6 verbose cache add name=undefined spec="." args=[".",null]
+7 verbose parsed url { protocol: null,
+7 verbose parsed url   slashes: null,
+7 verbose parsed url   auth: null,
+7 verbose parsed url   host: null,
+7 verbose parsed url   port: null,
+7 verbose parsed url   hostname: null,
+7 verbose parsed url   hash: null,
+7 verbose parsed url   search: null,
+7 verbose parsed url   query: null,
+7 verbose parsed url   pathname: '.',
+7 verbose parsed url   path: '.',
+7 verbose parsed url   href: '.' }
+8 silly lockFile 3a52ce78- .
+9 verbose lock . /Users/brian/.npm/3a52ce78-.lock
+10 verbose tar pack [ '/Users/brian/.npm/cachejax/0.0.1/package.tgz', '.' ]
+11 verbose tarball /Users/brian/.npm/cachejax/0.0.1/package.tgz
+12 verbose folder .
+13 info prepublish cachejax@0.0.1
+14 silly lockFile 1f1177db-tar tar://.
+15 verbose lock tar://. /Users/brian/.npm/1f1177db-tar.lock
+16 silly lockFile 08e7226b-n-npm-cachejax-0-0-1-package-tgz tar:///Users/brian/.npm/cachejax/0.0.1/package.tgz
+17 verbose lock tar:///Users/brian/.npm/cachejax/0.0.1/package.tgz /Users/brian/.npm/08e7226b-n-npm-cachejax-0-0-1-package-tgz.lock
+18 silly lockFile 1f1177db-tar tar://.
+19 silly lockFile 1f1177db-tar tar://.
+20 silly lockFile 08e7226b-n-npm-cachejax-0-0-1-package-tgz tar:///Users/brian/.npm/cachejax/0.0.1/package.tgz
+21 silly lockFile 08e7226b-n-npm-cachejax-0-0-1-package-tgz tar:///Users/brian/.npm/cachejax/0.0.1/package.tgz
+22 silly lockFile 1edb1919-brian-npm-cachejax-0-0-1-package /Users/brian/.npm/cachejax/0.0.1/package
+23 verbose lock /Users/brian/.npm/cachejax/0.0.1/package /Users/brian/.npm/1edb1919-brian-npm-cachejax-0-0-1-package.lock
+24 silly lockFile 1edb1919-brian-npm-cachejax-0-0-1-package /Users/brian/.npm/cachejax/0.0.1/package
+25 silly lockFile 1edb1919-brian-npm-cachejax-0-0-1-package /Users/brian/.npm/cachejax/0.0.1/package
+26 silly lockFile 3a52ce78- .
+27 silly lockFile 3a52ce78- .
+28 silly publish { name: 'cachejax',
+28 silly publish   version: '0.0.1',
+28 silly publish   description: 'Load data from your Baobab model before making a remote request',
+28 silly publish   main: 'dist/index.js',
+28 silly publish   scripts:
+28 silly publish    { dev: 'webpack --devtool source-map --progress --colors --watch',
+28 silly publish      build: 'webpack --progress --colors' },
+28 silly publish   repository: { type: 'git', url: 'https://github.com/bfitch/cachejax.git' },
+28 silly publish   keywords: [ 'cerebral', 'baobab', 'cache', 'ajax', 'axios' ],
+28 silly publish   author: { name: 'Brian Fitch' },
+28 silly publish   license: 'MIT',
+28 silly publish   devDependencies:
+28 silly publish    { axios: '^0.5.4',
+28 silly publish      babel: '^5.8.23',
+28 silly publish      'babel-core': '^5.8.24',
+28 silly publish      'babel-eslint': '^4.1.3',
+28 silly publish      'babel-loader': '^5.3.2',
+28 silly publish      'babel-runtime': '^5.8.24',
+28 silly publish      baobab: '^2.0.0',
+28 silly publish      eslint: '^1.4.3',
+28 silly publish      'eslint-loader': '^1.0.0',
+28 silly publish      'path-to-regexp': '^1.2.1',
+28 silly publish      webpack: '^1.9.10' },
+28 silly publish   eslintConfig:
+28 silly publish    { env: { browser: true, node: true, es6: true },
+28 silly publish      ecmaFeatures: {},
+28 silly publish      plugins: [],
+28 silly publish      parser: 'babel-eslint',
+28 silly publish      rules:
+28 silly publish       { camelcase: 0,
+28 silly publish         quotes: [Object],
+28 silly publish         'no-unused-vars': 0,
+28 silly publish         'new-cap': 0,
+28 silly publish         'no-console': 0,
+28 silly publish         'no-debugger': 0,
+28 silly publish         'no-undef': 1,
+28 silly publish         'no-var': 2,
+28 silly publish         'no-multi-spaces': 0,
+28 silly publish         strict: [Object] } },
+28 silly publish   bugs: { url: 'https://github.com/bfitch/cachejax/issues' },
+28 silly publish   homepage: 'https://github.com/bfitch/cachejax',
+28 silly publish   readme: '# cachejax\nLoad data from your Baobab model before making a remote request\n\n#### Motivation\n\n- Say you\'re writing a JS app with the URL `/messages`.\n- When a user navigates to `/messages`, you need to load all the messages for the logged in user.\n- Say you have another route: `messages/:id`.\n- If you want to support linking in your application (and you should!), now you need to *re-fetch all the messages in that route*.\n- This is wasteful and forefits one of the nice things about \'rich client\' JS apps: avoiding round trips to the server for data.\n\n**cachejax** is a small wrapper around the [axios](https://github.com/mzabriskie/axios) ajax library that supports data caching with [baobab](https://github.com/Yomguithereal/baobab). It decides whether to fetch data directly from the client (baobab) or make a remote request.\n\nIt\'s designed to be used with [cerebral](https://github.com/christianalfoni/cerebral) and was extracted from a cerebral project, but can be used with only baobab.\n\n### Install\n-------------\n`npm install cachejax`\n\n### Usage\n--------------\n##### Config\n\nSupply a `config` object mapping paths to ajax endpoints:\n```js\nconst config = {\n  currentUser: {\n    mapping: \'http://oath.dev/api/v1/me.json\',\n    root: false\n  },\n  messages: {\n    mapping: \'http://app.com/api/messages/v3/messages/:id\', // you can use express style routes\n    rootKey: \'message\',\n    batch: true\n  }\n}\n```\n`config` options:\n- *root*    - does the response JSON have a root key? `{user: {...}}` or `{...}`\n- *rootKey* - if the root key name is different than your baobab path name, supply it here\n- *mapping* - associate a Baobab path with a URL to fetch data\n- *batch*   - will you make batched requests to this endpoint?\n```js\n{\n  root:    Bool,   // default: true\n  rootKey: String, // default: undefined\n  mapping: String, // required\n  batch:   Bool    // default: false\n};\n```\n\n##### Initialize\n\nPass `config` and your `baobab` instance to the cachejax constructor:\n```js\nimport Cachejax from \'cachejax\';\n\nconst baobab = new Baobab({});\nconst cachejax = Cachejax(baobab, config);\n```\n\n##### Call\n\nUse *cachejax* anywhere you would normally make an http request:\n```js\ncachejax.get(\'currentUser\')\n    .then((response) => {\n      // response.data\n    })\n    .catch((response) => {\n      // handle error\n    });\n```\n\n- `cachejax.get()` will check if data exists at `baobab.get(\'currentUser\')` if not, it will fetch the data from `http://oath.dev/api/v1/me.json`\n- `get()` always returns a Promise whether data is found on the client or fetched from the server.\n- data is available at `response.data`. The full [axios response object](https://github.com/mzabriskie/axios#response-api) will, however,  be returned when a remote request is made.\n\n### API\n-------------\n\n- #### cachejax.get(path|url, params, options) => Promise\n  \n  ```js\n  config = { conversations: {mapping: \'http://app.com/api/v1/conversations\'} }\n  \n  cachejax.get(\'conversations\')  => GET /api/v1/convesations\n  ```\n  \n  ```js\n  config = { conversations: {mapping: \'http://app.com/api/v1/conversations:id\'} }\n  \n  cachejax.get(\'conversations\', {id: 3}  => GET /api/v1/convesations/3\n  ```\n  \n  ```js\n  config = { conversations: {mapping: \'http://app.com/api/v1/conversations\'} }\n  \n  cachejax.get(\'conversations\', {id: 3}  => GET /api/v1/convesations?id=3\n  ```\n  \n- #### cachejax.batch([data], mappingFunction) => [Promise]\n\n  - `data` - an array of data, e.g. user_ids\n  - `mappingFunction` - a function mapping data to a Request (Promise)\n  - Returns: an array of fulfilled Promises\n  \n  Given the config:\n  ```js\n  messages: {\n    mapping: \'http://app.com/api/v3/messages/:id\',\n    rootKey: \'message\',\n    batch: true\n  }\n  ```\n  \n  cachejax will exectue each `get()` concurrently (delegating to axios.all):\n  \n  ```js\n  let ids = [3,5,3,35,4]\n  \n   cachejax.batch(ids, (id) => cachejax.get(\'messages\', {id: id}))\n    .then((messages) => {\n      // messages = [{message 3},{message 5}, {message_35}...] \n      baobab.set(\'messages\', messages);\n    })\n  ```\n',
+28 silly publish   readmeFilename: 'README.md',
+28 silly publish   gitHead: '5897662fe8a5721ec574527a30fafdabb9f1c322',
+28 silly publish   _id: 'cachejax@0.0.1',
+28 silly publish   _shasum: '2e6c4c5a6ba69264fc132ad9fdbf417632d5c97e',
+28 silly publish   _from: '.' }
+29 verbose request where is /cachejax
+30 verbose request registry https://registry.npmjs.org/
+31 verbose request id 761d0369964b549d
+32 verbose url raw /cachejax
+33 verbose url resolving [ 'https://registry.npmjs.org/', './cachejax' ]
+34 verbose url resolved https://registry.npmjs.org/cachejax
+35 verbose request where is https://registry.npmjs.org/cachejax
+36 info trying registry request attempt 1 at 03:00:57
+37 http PUT https://registry.npmjs.org/cachejax
+38 http 403 https://registry.npmjs.org/cachejax
+39 verbose headers { 'content-type': 'application/json',
+39 verbose headers   'cache-control': 'max-age=60',
+39 verbose headers   'content-length': '95',
+39 verbose headers   'accept-ranges': 'bytes',
+39 verbose headers   date: 'Mon, 19 Oct 2015 07:00:59 GMT',
+39 verbose headers   via: '1.1 varnish',
+39 verbose headers   connection: 'keep-alive',
+39 verbose headers   'x-served-by': 'cache-atl6232-ATL',
+39 verbose headers   'x-cache': 'MISS',
+39 verbose headers   'x-cache-hits': '0',
+39 verbose headers   'x-timer': 'S1445238057.947855,VS0,VE1070' }
+40 error publish Failed PUT 403
+41 error Error: "You cannot publish over the previously published version 0.0.1." : cachejax
+41 error     at RegClient.<anonymous> (/opt/boxen/nodenv/versions/v0.10.38/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:308:14)
+41 error     at Request._callback (/opt/boxen/nodenv/versions/v0.10.38/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:246:65)
+41 error     at Request.self.callback (/opt/boxen/nodenv/versions/v0.10.38/lib/node_modules/npm/node_modules/request/request.js:236:22)
+41 error     at Request.emit (events.js:98:17)
+41 error     at Request.<anonymous> (/opt/boxen/nodenv/versions/v0.10.38/lib/node_modules/npm/node_modules/request/request.js:1142:14)
+41 error     at Request.emit (events.js:117:20)
+41 error     at IncomingMessage.<anonymous> (/opt/boxen/nodenv/versions/v0.10.38/lib/node_modules/npm/node_modules/request/request.js:1096:12)
+41 error     at IncomingMessage.emit (events.js:117:20)
+41 error     at _stream_readable.js:944:16
+41 error     at process._tickCallback (node.js:448:13)
+42 error If you need help, you may report this *entire* log,
+42 error including the npm and node versions, at:
+42 error     <http://github.com/npm/npm/issues>
+43 error System Darwin 14.4.0
+44 error command "/opt/boxen/nodenv/versions/v0.10.38/bin/node" "/opt/boxen/nodenv/versions/v0.10.38/bin/npm" "publish"
+45 error cwd /Users/brian/projects/cachejax
+46 error node -v v0.10.38
+47 error npm -v 1.4.28
+48 verbose exit [ 1, true ]
