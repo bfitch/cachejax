@@ -61,22 +61,10 @@
 
 	var _Promise = __webpack_require__(47)['default'];
 
-	var _interopRequireDefault = __webpack_require__(68)['default'];
+	var axios = __webpack_require__(68);
+	var pathToRegexp = __webpack_require__(88);
 
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports['default'] = Cachejax;
-
-	var _axios = __webpack_require__(69);
-
-	var _axios2 = _interopRequireDefault(_axios);
-
-	var _pathToRegexp = __webpack_require__(89);
-
-	var _pathToRegexp2 = _interopRequireDefault(_pathToRegexp);
-
-	function Cachejax(model, config) {
+	module.exports = function Cachejax(model, config) {
 	  return {
 	    get: function get(path) {
 	      var params = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
@@ -96,7 +84,7 @@
 	      } else {
 	        console.log('FETCH - ' + path);
 
-	        return _axios2['default'].get.apply(_axios2['default'], _toConsumableArray(request(path, params, config, extraParams)));
+	        return axios.get.apply(axios, _toConsumableArray(request(path, params, config, extraParams)));
 	      }
 	    },
 
@@ -105,7 +93,7 @@
 
 	      var promises = collection.map(request);
 
-	      return _axios2['default'].all(promises).then(function (responses) {
+	      return axios.all(promises).then(function (responses) {
 	        var rootKey = rootKeyConfig(_this.path, config);
 	        return responses.map(function (res) {
 	          return res.data[rootKey];
@@ -115,26 +103,26 @@
 
 	    // axios proxy methods
 	    all: function all() {
-	      return _axios2['default'].all.apply(_axios2['default'], arguments);
+	      return axios.all.apply(axios, arguments);
 	    },
 	    'delete': function _delete() {
-	      return _axios2['default']['delete'].apply(_axios2['default'], arguments);
+	      return axios['delete'].apply(axios, arguments);
 	    },
 	    head: function head() {
-	      return _axios2['default'].head.apply(_axios2['default'], arguments);
+	      return axios.head.apply(axios, arguments);
 	    },
 	    post: function post() {
-	      return _axios2['default'].post.apply(_axios2['default'], arguments);
+	      return axios.post.apply(axios, arguments);
 	    },
 	    put: function put() {
-	      return _axios2['default'].put.apply(_axios2['default'], arguments);
+	      return axios.put.apply(axios, arguments);
 	    },
 	    patch: function patch() {
-	      return _axios2['default'].patch.apply(_axios2['default'], arguments);
+	      return axios.patch.apply(axios, arguments);
 	    },
 
 	    setAuthorization: function setAuthorization(token) {
-	      _axios2['default'].interceptors.request.use(function (axiosConfig) {
+	      axios.interceptors.request.use(function (axiosConfig) {
 	        axiosConfig.headers = { 'Authorization': 'Bearer ' + token };
 	        return axiosConfig;
 	      });
@@ -175,7 +163,7 @@
 	    if (/:\w/.test(mappedUrl)) {
 	      // ('http://app.com/conversations/:id', {id: 1})
 
-	      var toPath = _pathToRegexp2['default'].compile(mappedUrl);
+	      var toPath = pathToRegexp.compile(mappedUrl);
 	      var query = _Object$keys(extraParams).length ? { params: extraParams } : {};
 	      return [toPath(params), query];
 	    } else if (mappedUrl) {
@@ -213,9 +201,7 @@
 	    });
 	    return obj;
 	  }
-	}
-
-	module.exports = exports['default'];
+	};
 
 /***/ },
 /* 2 */
@@ -1534,41 +1520,27 @@
 
 /***/ },
 /* 68 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
-
-	exports["default"] = function (obj) {
-	  return obj && obj.__esModule ? obj : {
-	    "default": obj
-	  };
-	};
-
-	exports.__esModule = true;
+	module.exports = __webpack_require__(69);
 
 /***/ },
 /* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(70);
-
-/***/ },
-/* 70 */
-/***/ function(module, exports, __webpack_require__) {
-
 	'use strict';
 
-	var defaults = __webpack_require__(71);
-	var utils = __webpack_require__(72);
-	var deprecatedMethod = __webpack_require__(73);
-	var dispatchRequest = __webpack_require__(74);
-	var InterceptorManager = __webpack_require__(82);
+	var defaults = __webpack_require__(70);
+	var utils = __webpack_require__(71);
+	var deprecatedMethod = __webpack_require__(72);
+	var dispatchRequest = __webpack_require__(73);
+	var InterceptorManager = __webpack_require__(81);
 
 	// Polyfill ES6 Promise if needed
 	(function () {
 	  // webpack is being used to set es6-promise to the native Promise
 	  // for the standalone build. It's necessary to make sure polyfill exists.
-	  var P = __webpack_require__(83);
+	  var P = __webpack_require__(82);
 	  if (P && typeof P.polyfill === 'function') {
 	    P.polyfill();
 	  }
@@ -1631,7 +1603,7 @@
 	axios.all = function (promises) {
 	  return Promise.all(promises);
 	};
-	axios.spread = __webpack_require__(88);
+	axios.spread = __webpack_require__(87);
 
 	// Expose interceptors
 	axios.interceptors = {
@@ -1670,12 +1642,12 @@
 
 
 /***/ },
-/* 71 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(72);
+	var utils = __webpack_require__(71);
 
 	var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 	var DEFAULT_CONTENT_TYPE = {
@@ -1728,7 +1700,7 @@
 
 
 /***/ },
-/* 72 */
+/* 71 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1951,7 +1923,7 @@
 
 
 /***/ },
-/* 73 */
+/* 72 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1979,7 +1951,7 @@
 
 
 /***/ },
-/* 74 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -1996,11 +1968,11 @@
 	    try {
 	      // For browsers use XHR adapter
 	      if (typeof window !== 'undefined') {
-	        __webpack_require__(76)(resolve, reject, config);
+	        __webpack_require__(75)(resolve, reject, config);
 	      }
 	      // For node use HTTP adapter
 	      else if (typeof process !== 'undefined') {
-	        __webpack_require__(76)(resolve, reject, config);
+	        __webpack_require__(75)(resolve, reject, config);
 	      }
 	    } catch (e) {
 	      reject(e);
@@ -2009,10 +1981,10 @@
 	};
 
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(75)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(74)))
 
 /***/ },
-/* 75 */
+/* 74 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -2109,20 +2081,20 @@
 
 
 /***/ },
-/* 76 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	/*global ActiveXObject:true*/
 
-	var defaults = __webpack_require__(71);
-	var utils = __webpack_require__(72);
-	var buildUrl = __webpack_require__(77);
-	var cookies = __webpack_require__(78);
-	var parseHeaders = __webpack_require__(79);
-	var transformData = __webpack_require__(80);
-	var urlIsSameOrigin = __webpack_require__(81);
+	var defaults = __webpack_require__(70);
+	var utils = __webpack_require__(71);
+	var buildUrl = __webpack_require__(76);
+	var cookies = __webpack_require__(77);
+	var parseHeaders = __webpack_require__(78);
+	var transformData = __webpack_require__(79);
+	var urlIsSameOrigin = __webpack_require__(80);
 
 	module.exports = function xhrAdapter(resolve, reject, config) {
 	  // Transform request data
@@ -2221,12 +2193,12 @@
 
 
 /***/ },
-/* 77 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(72);
+	var utils = __webpack_require__(71);
 
 	function encode(val) {
 	  return encodeURIComponent(val).
@@ -2279,12 +2251,12 @@
 
 
 /***/ },
-/* 78 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(72);
+	var utils = __webpack_require__(71);
 
 	module.exports = {
 	  write: function write(name, value, expires, path, domain, secure) {
@@ -2322,12 +2294,12 @@
 
 
 /***/ },
-/* 79 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(72);
+	var utils = __webpack_require__(71);
 
 	/**
 	 * Parse headers into an object
@@ -2362,12 +2334,12 @@
 
 
 /***/ },
-/* 80 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(72);
+	var utils = __webpack_require__(71);
 
 	/**
 	 * Transform the data for a request or a response
@@ -2387,12 +2359,12 @@
 
 
 /***/ },
-/* 81 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(72);
+	var utils = __webpack_require__(71);
 	var msie = /(msie|trident)/i.test(navigator.userAgent);
 	var urlParsingNode = document.createElement('a');
 	var originUrl;
@@ -2445,12 +2417,12 @@
 
 
 /***/ },
-/* 82 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(72);
+	var utils = __webpack_require__(71);
 
 	function InterceptorManager() {
 	  this.handlers = [];
@@ -2503,7 +2475,7 @@
 
 
 /***/ },
-/* 83 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var require;var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(process, setImmediate, global, module) {/*!
@@ -2642,7 +2614,7 @@
 	    function lib$es6$promise$asap$$attemptVertex() {
 	      try {
 	        var r = require;
-	        var vertx = __webpack_require__(86);
+	        var vertx = __webpack_require__(85);
 	        lib$es6$promise$asap$$vertxNext = vertx.runOnLoop || vertx.runOnContext;
 	        return lib$es6$promise$asap$$useVertxTimer();
 	      } catch(e) {
@@ -3467,7 +3439,7 @@
 	    };
 
 	    /* global define:true module:true window: true */
-	    if ("function" === 'function' && __webpack_require__(87)['amd']) {
+	    if ("function" === 'function' && __webpack_require__(86)['amd']) {
 	      !(__WEBPACK_AMD_DEFINE_RESULT__ = function() { return lib$es6$promise$umd$$ES6Promise; }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	    } else if (typeof module !== 'undefined' && module['exports']) {
 	      module['exports'] = lib$es6$promise$umd$$ES6Promise;
@@ -3479,13 +3451,13 @@
 	}).call(this);
 
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(75), __webpack_require__(84).setImmediate, (function() { return this; }()), __webpack_require__(85)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(74), __webpack_require__(83).setImmediate, (function() { return this; }()), __webpack_require__(84)(module)))
 
 /***/ },
-/* 84 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(75).nextTick;
+	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(74).nextTick;
 	var apply = Function.prototype.apply;
 	var slice = Array.prototype.slice;
 	var immediateIds = {};
@@ -3561,10 +3533,10 @@
 	exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate : function(id) {
 	  delete immediateIds[id];
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(84).setImmediate, __webpack_require__(84).clearImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(83).setImmediate, __webpack_require__(83).clearImmediate))
 
 /***/ },
-/* 85 */
+/* 84 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -3580,20 +3552,20 @@
 
 
 /***/ },
-/* 86 */
+/* 85 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 87 */
+/* 86 */
 /***/ function(module, exports) {
 
 	module.exports = function() { throw new Error("define cannot be used indirect"); };
 
 
 /***/ },
-/* 88 */
+/* 87 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3626,10 +3598,10 @@
 
 
 /***/ },
-/* 89 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isarray = __webpack_require__(90)
+	var isarray = __webpack_require__(89)
 
 	/**
 	 * Expose `pathToRegexp`.
@@ -4022,7 +3994,7 @@
 
 
 /***/ },
-/* 90 */
+/* 89 */
 /***/ function(module, exports) {
 
 	module.exports = Array.isArray || function (arr) {
