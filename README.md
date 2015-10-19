@@ -13,6 +13,10 @@ Load data from your Baobab model before making a remote request
 
 It's designed to be used with [cerebral](https://github.com/christianalfoni/cerebral) and was extracted from a cerebral project, but can be used with only baobab.
 
+### Install
+-------------
+`npm install cachejax`
+
 ### Usage
 --------------
 ##### Config
