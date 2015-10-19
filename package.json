@@ -4,10 +4,8 @@
   "description": "Load data from your Baobab model before making a remote request",
   "main": "dist/index.js",
   "scripts": {
-    "dev":           "npm run webpack-watch",
-    "build":         "npm run webpack",
-    "webpack-watch": "webpack --devtool source-map --progress --colors --watch",
-    "webpack":       "webpack --progress --colors"
+    "dev":   "webpack --devtool source-map --progress --colors --watch",
+    "build": "webpack --progress --colors"
   },
   "repository": {
     "type": "git",
