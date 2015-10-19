@@ -4,6 +4,7 @@ import pathToRegexp from 'path-to-regexp';
 export default function Cachejax(model, config) {
   return {
     get: function(path, params={}, options={}, extraParams={}) {
+      this.path        = path;
       const forceFetch = options.forceFetch || false;
       const data       = cachedData(path, model, params, config);
 
@@ -25,7 +26,8 @@ export default function Cachejax(model, config) {
       let promises = collection.map(request);
 
       return axios.all(promises).then((responses) => {
-        return responses.map(res => res.data[config.rootKey]);
+        let rootKey = rootKeyConfig(this.path,config);
+        return responses.map(res => res.data[rootKey]);
       });
     },
 
@@ -65,7 +67,7 @@ export default function Cachejax(model, config) {
     return root ? {data: {[rootKey]: data}} : {data: data};
   }
 
-  function rootKeyConfig(path, config, options) {
+  function rootKeyConfig(path, config, options={}) {
     return options.rootKey || baseConfig(path, config).rootKey || path;
   }
   

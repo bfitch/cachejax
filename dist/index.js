@@ -83,6 +83,7 @@
 	      var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 	      var extraParams = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
 
+	      this.path = path;
 	      var forceFetch = options.forceFetch || false;
 	      var data = cachedData(path, model, params, config);
 
@@ -100,11 +101,14 @@
 	    },
 
 	    batch: function batch(collection, request) {
+	      var _this = this;
+
 	      var promises = collection.map(request);
 
 	      return _axios2['default'].all(promises).then(function (responses) {
+	        var rootKey = rootKeyConfig(_this.path, config);
 	        return responses.map(function (res) {
-	          return res.data[config.rootKey];
+	          return res.data[rootKey];
 	        });
 	      });
 	    },
@@ -159,7 +163,9 @@
 	    return root ? { data: _defineProperty({}, rootKey, data) } : { data: data };
 	  }
 
-	  function rootKeyConfig(path, config, options) {
+	  function rootKeyConfig(path, config) {
+	    var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
 	    return options.rootKey || baseConfig(path, config).rootKey || path;
 	  }
 
