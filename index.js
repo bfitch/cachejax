@@ -31,20 +31,20 @@ module.exports = function Cachejax(model, config) {
       });
     },
 
+    setAuthorization: function(token) {
+      axios.interceptors.request.use(function (axiosConfig) {
+        axiosConfig.headers = {'Authorization': `Bearer ${token}`};
+        return axiosConfig;
+      });
+    },
+
     // axios proxy methods
     all:    function(...args) { return axios.all(...args); },
     delete: function(...args) { return axios.delete(...args); },
     head:   function(...args) { return axios.head(...args); },
     post:   function(...args) { return axios.post(...args); },
     put:    function(...args) { return axios.put(...args); },
-    patch:  function(...args) { return axios.patch(...args); },
-
-    setAuthorization: function(token) {
-      axios.interceptors.request.use(function (axiosConfig) {
-        axiosConfig.headers = {'Authorization': `Bearer ${token}`};
-        return axiosConfig;
-      });
-    }
+    patch:  function(...args) { return axios.patch(...args); }
   };
 
   function cachedData(path, model, params, config) {
@@ -67,16 +67,11 @@ module.exports = function Cachejax(model, config) {
     return root ? {data: {[rootKey]: data}} : {data: data};
   }
 
-  function rootKeyConfig(path, config, options={}) {
-    return options.rootKey || baseConfig(path, config).rootKey || path;
-  }
-  
   function request(path, params, config, extraParams) {
     const mappedUrl = baseConfig(path, config).mapping;
 
-    if (/:\w/.test(mappedUrl)) {
-      // ('http://app.com/conversations/:id', {id: 1})
-
+    if (isExpressStyleRoute(mappedUrl)) {
+      // (/conversations/:id', {id: 1})
       let toPath = pathToRegexp.compile(mappedUrl);
       let query  = Object.keys(extraParams).length ? {params: extraParams} : {}
       return [toPath(params), query]
@@ -91,14 +86,8 @@ module.exports = function Cachejax(model, config) {
     }
   }
 
-  function rootConfig(path, config, options) {
-    if (typeof options.root != 'undefined') {
-      return options.root;
-    } else if (typeof baseConfig(path, config).root != 'undefined') {
-      return baseConfig(path, config).root;
-    } else {
-      return true;
-    }
+  function isExpressStyleRoute(url) {
+    return /:\w/.test(url);
   }
 
   function baseConfig(path, config) {
@@ -109,6 +98,20 @@ module.exports = function Cachejax(model, config) {
       batch:   undefined
     };
     return config[path] || nullConfig;
+  }
+
+  function rootConfig(path, config, options) {
+    if (typeof options.root != 'undefined') {
+      return options.root;
+    } else if (typeof baseConfig(path, config).root != 'undefined') {
+      return baseConfig(path, config).root;
+    } else {
+      return true;
+    }
+  }
+
+  function rootKeyConfig(path, config, options={}) {
+    return options.rootKey || baseConfig(path, config).rootKey || path;
   }
 
   function merge(obj, objToCopy) {
