@@ -1,6 +1,6 @@
 {
   "name": "cachejax",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Load data from your Baobab model before making a remote request",
   "main": "dist/index.js",
   "scripts": {
