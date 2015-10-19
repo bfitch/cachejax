@@ -125,3 +125,16 @@ cachejax.get('currentUser')
       baobab.set('messages', messages);
     })
   ```
+- #### cachejax.setAuthorization(token)
+
+  - Sets a bearer token `Authorization` header for all ajax requests
+  
+##### [axios proxy methods](https://github.com/mzabriskie/axios#request-method-aliases)
+-------------------------
+
+- cachejax.all()
+- cachejax.delete()
+- cachejax.head()
+- cachejax.post()
+- cachejax.put()
+- cachejax.patch()
