@@ -22,7 +22,7 @@ It's designed to be used with [cerebral](https://github.com/christianalfoni/cere
 ##### Config
 
   Supply a `config` object mapping paths to ajax endpoints:
-  
+
   ```js
   const config = {
     currentUser: {
@@ -41,7 +41,7 @@ It's designed to be used with [cerebral](https://github.com/christianalfoni/cere
   - *rootKey* - if the root key name is different than your baobab path name, supply it here
   - *mapping* - associate a Baobab path with a URL to fetch data
   - *batch*   - will you make batched requests to this endpoint?
-  
+
   ```js
   {
     root:    Bool,   // default: true
@@ -82,31 +82,31 @@ It's designed to be used with [cerebral](https://github.com/christianalfoni/cere
 -------------
 
 - #### cachejax.get(path|url, params, options) => Promise
-  
+
   ```js
   config = { conversations: {mapping: 'http://app.com/api/v1/conversations'} }
-  
-  cachejax.get('conversations')  => GET /api/v1/convesations
+
+  cachejax.get('conversations')  => GET /api/v1/conversations
   ```
-  
+
   ```js
   config = { conversations: {mapping: 'http://app.com/api/v1/conversations:id'} }
-  
-  cachejax.get('conversations', {id: 3}  => GET /api/v1/convesations/3
+
+  cachejax.get('conversations', {id: 3}  => GET /api/v1/conversations/3
   ```
-  
+
   ```js
   config = { conversations: {mapping: 'http://app.com/api/v1/conversations'} }
-  
-  cachejax.get('conversations', {id: 3}  => GET /api/v1/convesations?id=3
+
+  cachejax.get('conversations', {id: 3}  => GET /api/v1/conversations?id=3
   ```
-  
+
 - #### cachejax.batch([data], mappingFunction) => [Promise]
 
   - `data` - an array of data, e.g. user_ids
   - `mappingFunction` - a function mapping data to a Request (Promise)
   - Returns: an array of fulfilled Promises
-  
+
   Given the config:
   ```js
   messages: {
@@ -115,22 +115,22 @@ It's designed to be used with [cerebral](https://github.com/christianalfoni/cere
     batch: true
   }
   ```
-  
+
   cachejax will exectue each `get()` concurrently (delegating to axios.all):
-  
+
   ```js
   let ids = [3,5,3,35,4]
-  
+
   cachejax.batch(ids, (id) => cachejax.get('messages', {id: id}))
     .then((messages) => {
-      // messages = [{message 3},{message 5}, {message_35}...] 
+      // messages = [{message 3},{message 5}, {message_35}...]
       baobab.set('messages', messages);
     })
   ```
 - #### cachejax.setAuthorization(token)
 
   - Sets a bearer token `Authorization` header for all ajax requests
-  
+
 - #### [axios proxy methods](https://github.com/mzabriskie/axios#request-method-aliases)
   - cachejax.all()
   - cachejax.delete()
