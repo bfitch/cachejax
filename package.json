@@ -1,0 +1,70 @@
+{
+  "name": "cachejax",
+  "version": "0.0.1",
+  "description": "Load data from your Baobab model before making a remote request",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "webpack --devtool source-map --progress --colors --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bfitch/cachejax.git"
+  },
+  "keywords": [
+    "cerebral",
+    "baobab",
+    "cache",
+    "ajax",
+    "axios"
+  ],
+  "author": "Brian Fitch",
+  "license": "MIT",
+  "devDependencies": {
+    "axios": "^0.5.4",
+    "babel": "^5.8.23",
+    "babel-core": "^5.8.24",
+    "babel-eslint": "^4.1.3",
+    "babel-loader": "^5.3.2",
+    "babel-runtime": "^5.8.24",
+    "baobab": "^2.0.0",
+    "eslint": "^1.4.3",
+    "eslint-loader": "^1.0.0",
+    "path-to-regexp": "^1.2.1",
+    "webpack": "^1.9.10"
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "node": true,
+      "es6": true
+    },
+    "ecmaFeatures": {
+    },
+    "plugins": [
+    ],
+    "parser": "babel-eslint",
+    "rules": {
+      "camelcase": 0,
+      "quotes": [
+        0,
+        "double",
+        "avoid-escape"
+      ],
+      "no-unused-vars": 0,
+      "new-cap": 0,
+      "no-console": 0,
+      "no-debugger": 0,
+      "no-undef": 1,
+      "no-var": 2,
+      "no-multi-spaces": 0,
+      "strict": [
+        0,
+        "never"
+      ]
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/bfitch/cachejax/issues"
+  },
+  "homepage": "https://github.com/bfitch/cachejax"
+}
