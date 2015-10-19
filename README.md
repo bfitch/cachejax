@@ -21,60 +21,61 @@ It's designed to be used with [cerebral](https://github.com/christianalfoni/cere
 --------------
 ##### Config
 
-Supply a `config` object mapping paths to ajax endpoints:
-```js
-const config = {
-  currentUser: {
-    mapping: 'http://oath.dev/api/v1/me.json',
-    root: false
-  },
-  messages: {
-    mapping: 'http://app.com/api/messages/v3/messages/:id', // you can use express style routes
-    rootKey: 'message',
-    batch: true
+  Supply a `config` object mapping paths to ajax endpoints:
+  ```js
+  const config = {
+    currentUser: {
+      mapping: 'http://oath.dev/api/v1/me.json',
+      root: false
+    },
+    messages: {
+      mapping: 'http://app.com/api/messages/v3/messages/:id', // you can use express style routes
+      rootKey: 'message',
+      batch: true
+    }
   }
-}
-```
-`config` options:
-- *root*    - does the response JSON have a root key? `{user: {...}}` or `{...}`
-- *rootKey* - if the root key name is different than your baobab path name, supply it here
-- *mapping* - associate a Baobab path with a URL to fetch data
-- *batch*   - will you make batched requests to this endpoint?
-```js
-{
-  root:    Bool,   // default: true
-  rootKey: String, // default: undefined
-  mapping: String, // required
-  batch:   Bool    // default: false
-};
-```
+  ```
+  `config` options:
+  - *root*    - does the response JSON have a root key? `{user: {...}}` or `{...}`
+  - *rootKey* - if the root key name is different than your baobab path name, supply it here
+  - *mapping* - associate a Baobab path with a URL to fetch data
+  - *batch*   - will you make batched requests to this endpoint?
+  
+  ```js
+  {
+    root:    Bool,   // default: true
+    rootKey: String, // default: undefined
+    mapping: String, // required
+    batch:   Bool    // default: false
+  };
+  ```
 
 ##### Initialize
 
-Pass `config` and your `baobab` instance to the cachejax constructor:
-```js
-import Cachejax from 'cachejax';
+  Pass `config` and your `baobab` instance to the cachejax constructor:
+  ```js
+  import Cachejax from 'cachejax';
 
-const baobab = new Baobab({});
-const cachejax = Cachejax(baobab, config);
-```
+  const baobab = new Baobab({});
+  const cachejax = Cachejax(baobab, config);
+  ```
 
 ##### Call
 
-Use *cachejax* anywhere you would normally make an http request:
-```js
-cachejax.get('currentUser')
-    .then((response) => {
-      // response.data
-    })
-    .catch((response) => {
-      // handle error
-    });
-```
+  Use *cachejax* anywhere you would normally make an http request:
+  ```js
+  cachejax.get('currentUser')
+      .then((response) => {
+        // response.data
+      })
+      .catch((response) => {
+        // handle error
+      });
+  ```
 
-- `cachejax.get()` will check if data exists at `baobab.get('currentUser')` if not, it will fetch the data from `http://oath.dev/api/v1/me.json`
-- `get()` always returns a Promise whether data is found on the client or fetched from the server.
-- data is available at `response.data`. The full [axios response object](https://github.com/mzabriskie/axios#response-api) will, however,  be returned when a remote request is made.
+  - `cachejax.get()` will check if data exists at `baobab.get('currentUser')` if not, it will fetch the data from `http://oath.dev/api/v1/me.json`
+  - `get()` always returns a Promise whether data is found on the client or fetched from the server.
+  - data is available at `response.data`. The full [axios response object](https://github.com/mzabriskie/axios#response-api) will, however,  be returned when a remote request is made.
 
 ### API
 -------------
@@ -82,21 +83,21 @@ cachejax.get('currentUser')
 - #### cachejax.get(path|url, params, options) => Promise
   
   ```js
-  config = { conversations: {mapping: 'http://app.com/api/v1/conversations'} }
+    config = { conversations: {mapping: 'http://app.com/api/v1/conversations'} }
   
-  cachejax.get('conversations')  => GET /api/v1/convesations
+    cachejax.get('conversations')  => GET /api/v1/convesations
   ```
   
   ```js
-  config = { conversations: {mapping: 'http://app.com/api/v1/conversations:id'} }
+    config = { conversations: {mapping: 'http://app.com/api/v1/conversations:id'} }
   
-  cachejax.get('conversations', {id: 3}  => GET /api/v1/convesations/3
+    cachejax.get('conversations', {id: 3}  => GET /api/v1/convesations/3
   ```
   
   ```js
-  config = { conversations: {mapping: 'http://app.com/api/v1/conversations'} }
+    config = { conversations: {mapping: 'http://app.com/api/v1/conversations'} }
   
-  cachejax.get('conversations', {id: 3}  => GET /api/v1/convesations?id=3
+    cachejax.get('conversations', {id: 3}  => GET /api/v1/convesations?id=3
   ```
   
 - #### cachejax.batch([data], mappingFunction) => [Promise]
@@ -129,12 +130,12 @@ cachejax.get('currentUser')
 
   - Sets a bearer token `Authorization` header for all ajax requests
   
-##### [axios proxy methods](https://github.com/mzabriskie/axios#request-method-aliases)
--------------------------
+  ##### [axios proxy methods](https://github.com/mzabriskie/axios#request-method-aliases)
+  -------------------------
 
-- cachejax.all()
-- cachejax.delete()
-- cachejax.head()
-- cachejax.post()
-- cachejax.put()
-- cachejax.patch()
+  - cachejax.all()
+  - cachejax.delete()
+  - cachejax.head()
+  - cachejax.post()
+  - cachejax.put()
+  - cachejax.patch()
