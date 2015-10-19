@@ -3,7 +3,9 @@ module.exports = {
     app: ["./index.js"]
   },
   output: {
-    filename: "dist/index.js"
+    library: 'cachejax',
+    libraryTarget: 'commonjs2',
+    filename: 'dist/index.js'
   },
   module: {
     loaders: [
