@@ -22,6 +22,7 @@ It's designed to be used with [cerebral](https://github.com/christianalfoni/cere
 ##### Config
 
   Supply a `config` object mapping paths to ajax endpoints:
+  
   ```js
   const config = {
     currentUser: {
@@ -83,21 +84,21 @@ It's designed to be used with [cerebral](https://github.com/christianalfoni/cere
 - #### cachejax.get(path|url, params, options) => Promise
   
   ```js
-    config = { conversations: {mapping: 'http://app.com/api/v1/conversations'} }
+  config = { conversations: {mapping: 'http://app.com/api/v1/conversations'} }
   
-    cachejax.get('conversations')  => GET /api/v1/convesations
+  cachejax.get('conversations')  => GET /api/v1/convesations
   ```
   
   ```js
-    config = { conversations: {mapping: 'http://app.com/api/v1/conversations:id'} }
+  config = { conversations: {mapping: 'http://app.com/api/v1/conversations:id'} }
   
-    cachejax.get('conversations', {id: 3}  => GET /api/v1/convesations/3
+  cachejax.get('conversations', {id: 3}  => GET /api/v1/convesations/3
   ```
   
   ```js
-    config = { conversations: {mapping: 'http://app.com/api/v1/conversations'} }
+  config = { conversations: {mapping: 'http://app.com/api/v1/conversations'} }
   
-    cachejax.get('conversations', {id: 3}  => GET /api/v1/convesations?id=3
+  cachejax.get('conversations', {id: 3}  => GET /api/v1/convesations?id=3
   ```
   
 - #### cachejax.batch([data], mappingFunction) => [Promise]
@@ -120,7 +121,7 @@ It's designed to be used with [cerebral](https://github.com/christianalfoni/cere
   ```js
   let ids = [3,5,3,35,4]
   
-   cachejax.batch(ids, (id) => cachejax.get('messages', {id: id}))
+  cachejax.batch(ids, (id) => cachejax.get('messages', {id: id}))
     .then((messages) => {
       // messages = [{message 3},{message 5}, {message_35}...] 
       baobab.set('messages', messages);
@@ -130,9 +131,7 @@ It's designed to be used with [cerebral](https://github.com/christianalfoni/cere
 
   - Sets a bearer token `Authorization` header for all ajax requests
   
-  ##### [axios proxy methods](https://github.com/mzabriskie/axios#request-method-aliases)
-  -------------------------
-
+- #### [axios proxy methods](https://github.com/mzabriskie/axios#request-method-aliases)
   - cachejax.all()
   - cachejax.delete()
   - cachejax.head()
