@@ -128,7 +128,7 @@ It's designed to be used with [cerebral](https://github.com/christianalfoni/cere
   ```js
   messages: {
     mapping: 'http://app.com/api/v3/messages/:id',
-    rootKey: 'message',
+    root: 'message',
     batch: true
   }
   ```
