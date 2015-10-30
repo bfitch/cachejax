@@ -27,10 +27,7 @@ export default function Cachejax(model, config) {
 
       return axios.all(promises).then((responses) => {
         let root = rootConfig(this.path, config);
-
-        return responses.map(res => {
-          return (root ? res.data[root] : res.data);
-        });
+        return responses.map(res => res.data[root]);
       });
     },
 
@@ -104,12 +101,12 @@ export default function Cachejax(model, config) {
     return config[path] || nullConfig;
   }
 
-  function rootConfig(path, config, options) {
-    if (typeof options.root === 'string') {
+  function rootConfig(path, config, options={}) {
+    if (options.root && typeof options.root === 'string') {
       // passed in at call time: cachejax.get('', {root: 'foo'})
       return options.root;
 
-    } else if (typeof options.root === 'boolean' && !options.root) {
+    } else if (options.root && (typeof options.root === 'boolean') && !options.root) {
       // passed in at call time: cachejax.get('', {root: false})
       return false;
 
