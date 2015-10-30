@@ -150,9 +150,12 @@ module.exports =
 
 	    // is this an array?, is it empty?, is param in the first object in the array?
 	    if (Array.isArray(data) && data.length && data[0][attr] != undefined) {
+
+	      // TODO: check cached data by all params (attrs) passed in, not just first!
 	      var _cachedData = data.filter(function (item) {
 	        return item[attr] === value;
 	      });
+
 	      return baseConfig(path, config).batch ? _cachedData[0] : _cachedData;
 	    } else {
 	      return data;
@@ -196,24 +199,20 @@ module.exports =
 	  }
 
 	  function rootConfig(path, config, options) {
-	    console.log("ROOT CONFIG");
-
 	    if (typeof options.root === 'string') {
-	      // { root: 'foo' }
+	      // passed in at call time: cachejax.get('', {root: 'foo'})
 	      return options.root;
-	    } else if (typeof baseConfig(path, config).root === 'string') {
-	      // { root: 'foo' }
-	      return baseConfig(path, config).root;
 	    } else if (typeof options.root === 'boolean' && !options.root) {
-	      // { root: false }
+	      // passed in at call time: cachejax.get('', {root: false})
 	      return false;
+	    } else if (typeof baseConfig(path, config).root === 'string') {
+	      // base config: Cachejax(model, {'currentUser': {root: 'foo'}})
+	      return baseConfig(path, config).root;
 	    } else if (typeof baseConfig(path, config).root === 'boolean' && !baseConfig(path, config).root) {
-	      console.log("ROOT IS FALSE");
-
-	      // { root: false }
+	      // base config: Cachejax(model, {'currentUser': {root: false}})
 	      return false;
 	    } else if (typeof baseConfig(path, config).root === 'undefined') {
-	      // { root: undefined }
+	      // base config: Cachejax(model, {'currentUser': {})
 	      return path;
 	    }
 	  }

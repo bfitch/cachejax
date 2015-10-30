@@ -1,7 +1,7 @@
-var axios = require('axios');
-var pathToRegexp = require('path-to-regexp');
+import axios from 'axios';
+import pathToRegexp from 'path-to-regexp';
 
-module.exports = function Cachejax(model, config) {
+export default function Cachejax(model, config) {
   return {
     get: function(path, params={}, options={}, extraParams={}) {
       this.path        = path;
@@ -26,8 +26,11 @@ module.exports = function Cachejax(model, config) {
       let promises = collection.map(request);
 
       return axios.all(promises).then((responses) => {
-        let rootKey = rootKeyConfig(this.path,config);
-        return responses.map(res => res.data[rootKey]);
+        let root = rootConfig(this.path, config);
+
+        return responses.map(res => {
+          return (root ? res.data[root] : res.data);
+        });
       });
     },
 
@@ -54,7 +57,10 @@ module.exports = function Cachejax(model, config) {
     
     // is this an array?, is it empty?, is param in the first object in the array?
     if (Array.isArray(data) && data.length && (data[0][attr] != undefined)) {
+
+      // TODO: check cached data by all params (attrs) passed in, not just first!
       let cachedData = data.filter((item) => item[attr] === value);
+
       return baseConfig(path, config).batch ? cachedData[0] : cachedData;
     } else {
       return data;
@@ -62,9 +68,8 @@ module.exports = function Cachejax(model, config) {
   }
 
   function cachedResponse(path, config, options, data) {
-    const root    = rootConfig(path, config, options);
-    const rootKey = rootKeyConfig(path, config, options);
-    return root ? {data: {[rootKey]: data}} : {data: data};
+    const root = rootConfig(path, config, options);
+    return root ? {data: {[root]: data}} : {data: data};
   }
 
   function request(path, params, config, extraParams) {
@@ -93,7 +98,6 @@ module.exports = function Cachejax(model, config) {
   function baseConfig(path, config) {
     let nullConfig = {
       root:    undefined,
-      rootKey: undefined,
       mapping: undefined,
       batch:   undefined
     };
@@ -101,17 +105,26 @@ module.exports = function Cachejax(model, config) {
   }
 
   function rootConfig(path, config, options) {
-    if (typeof options.root != 'undefined') {
+    if (typeof options.root === 'string') {
+      // passed in at call time: cachejax.get('', {root: 'foo'})
       return options.root;
-    } else if (typeof baseConfig(path, config).root != 'undefined') {
-      return baseConfig(path, config).root;
-    } else {
-      return true;
-    }
-  }
 
-  function rootKeyConfig(path, config, options={}) {
-    return options.rootKey || baseConfig(path, config).rootKey || path;
+    } else if (typeof options.root === 'boolean' && !options.root) {
+      // passed in at call time: cachejax.get('', {root: false})
+      return false;
+
+    } else if (typeof baseConfig(path, config).root === 'string') {
+      // base config: Cachejax(model, {'currentUser': {root: 'foo'}})
+      return baseConfig(path, config).root;
+
+    } else if (typeof baseConfig(path, config).root === 'boolean' && !baseConfig(path, config).root) {
+      // base config: Cachejax(model, {'currentUser': {root: false}})
+      return false;
+
+    } else if (typeof baseConfig(path, config).root === 'undefined') {
+      // base config: Cachejax(model, {'currentUser': {})
+      return path;
+    }
   }
 
   function merge(obj, objToCopy) {
