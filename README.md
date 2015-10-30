@@ -7,7 +7,7 @@ Load data from your Baobab model before making a remote request
 - When a user navigates to `/messages`, you need to load all the messages for the logged in user.
 - Say you have another route: `messages/:id`.
 - If you want to support linking in your application (and you should!), now you need to *re-fetch all the messages in that route*.
-- This is wasteful and forefits one of the nice things about 'rich client' JS apps: avoiding round trips to the server for data.
+- This is wasteful and forfeits one of the nice things about 'rich client' JS apps: avoiding round trips to the server for data.
 
 **cachejax** is a small wrapper around the [axios](https://github.com/mzabriskie/axios) ajax library that supports data caching with [baobab](https://github.com/Yomguithereal/baobab). It decides whether to fetch data directly from the client (baobab) or make a remote request.
 
@@ -31,23 +31,21 @@ It's designed to be used with [cerebral](https://github.com/christianalfoni/cere
     },
     messages: {
       mapping: 'http://app.com/api/messages/v3/messages/:id', // you can use express style routes
-      rootKey: 'message',
+      root: 'message',
       batch: true
     }
   }
   ```
   `config` options:
-  - *root*    - does the response JSON have a root key? `{user: {...}}` or `{...}`
-  - *rootKey* - if the root key name is different than your baobab path name, supply it here
+  - *root*    - does the response JSON have a root key? `{user: {...}}` or `{...}` or customize the key name `'user'`
   - *mapping* - associate a Baobab path with a URL to fetch data
   - *batch*   - will you make batched requests to this endpoint?
 
   ```js
   {
-    root:    Bool,   // default: true
-    rootKey: String, // default: undefined
-    mapping: String, // required
-    batch:   Bool    // default: false
+    root:    Boolean || String, // default: true
+    mapping: String,            // required
+    batch:   Boolean            // default: false
   };
   ```
 
@@ -81,24 +79,39 @@ It's designed to be used with [cerebral](https://github.com/christianalfoni/cere
 ### API
 -------------
 
-- #### cachejax.get(path|url, params, options) => Promise
+- #### cachejax.get(path|url, params, config) => Promise
+  - `path` - a baobab path name to fetch data
+  - `url` - a URL to fetch data from
+  - `params` - url params, query params, or attributes to filter by in baobab
+  - `config` - any overrides or customization to `Cachejax() base config`
+  - `Promise` - returns a `then()`able object whether fetched from AJAX or baobab
+  
+  Examples:
 
   ```js
-  config = { conversations: {mapping: 'http://app.com/api/v1/conversations'} }
-
-  cachejax.get('conversations')  => GET /api/v1/conversations
+  let cachejax = Cachejax(model, config);
   ```
-
+  
+  - Using a baobab path `'conversations'`:
   ```js
-  config = { conversations: {mapping: 'http://app.com/api/v1/conversations:id'} }
-
-  cachejax.get('conversations', {id: 3}  => GET /api/v1/conversations/3
+    let config = { conversations: {mapping: 'http://app.com/api/v1/conversations'} }
+    cachejax.get('conversations') // => baobab.get('conversations') or GET /api/v1/conversations 
   ```
-
+  
+  - baobab path with URL param:
   ```js
-  config = { conversations: {mapping: 'http://app.com/api/v1/conversations'} }
-
-  cachejax.get('conversations', {id: 3}  => GET /api/v1/conversations?id=3
+    let config = { conversations: {mapping: 'http://app.com/api/v1/conversations:id'} }
+    cachejax.get('conversations', {id: 3}) // => baobab.get('conversations') or GET /api/v1/conversations/3
+  ```
+  
+  - baobab path with query param:
+  ```js
+    let config = { conversations: {mapping: 'http://app.com/api/v1/conversations'} }
+    cachejax.get('conversations', {id: 3} // => baobab.get('conversations') or GET /api/v1/conversations?id=3
+  ```
+  - Normal AJAX call:
+  ```js
+    cachejax.get('http://www.google.com');
   ```
 
 - #### cachejax.batch([data], mappingFunction) => [Promise]
@@ -123,7 +136,7 @@ It's designed to be used with [cerebral](https://github.com/christianalfoni/cere
 
   cachejax.batch(ids, (id) => cachejax.get('messages', {id: id}))
     .then((messages) => {
-      // messages = [{message 3},{message 5}, {message_35}...]
+      // messages = [{id: 3,...},{id: 5,...}, {id: 35,...}...]
       baobab.set('messages', messages);
     })
   ```
