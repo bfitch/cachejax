@@ -36,11 +36,9 @@ It's designed to be used with [cerebral](https://github.com/christianalfoni/cere
     }
   }
   ```
+  
   `config` options:
-  - *root*    - does the response JSON have a root key? `{user: {...}}` or `{...}` or customize the key name `'user'`
-  - *mapping* - associate a Baobab path with a URL to fetch data
-  - *batch*   - will you make batched requests to this endpoint?
-
+  
   ```js
   {
     root:    Boolean || String, // default: true
@@ -48,10 +46,14 @@ It's designed to be used with [cerebral](https://github.com/christianalfoni/cere
     batch:   Boolean            // default: false
   };
   ```
+  
+  - *root*    - does the response JSON have a root key? `{user: {...}}` or `{...}` or customize the key name `'user'`
+  - *mapping* - associate a Baobab path with a URL to fetch data
+  - *batch*   - will you make batched requests to this endpoint?
 
 ##### Initialize
 
-  Pass `config` and your `baobab` instance to the cachejax constructor:
+  Pass `config` and your `baobab` instance to the `Cachejax` constructor:
   ```js
   import Cachejax from 'cachejax';
 
@@ -61,7 +63,7 @@ It's designed to be used with [cerebral](https://github.com/christianalfoni/cere
 
 ##### Call
 
-  Use *cachejax* anywhere you would normally make an http request:
+  Use `cachejax` anywhere you would normally make an http request:
   ```js
   cachejax.get('currentUser')
       .then((response) => {
@@ -79,7 +81,7 @@ It's designed to be used with [cerebral](https://github.com/christianalfoni/cere
 ### API
 -------------
 
-- #### cachejax.get(path|url, params, config) => Promise
+- #### cachejax.get(path||url, params, config) => Promise
   - `path` - a baobab path name to fetch data
   - `url` - a URL to fetch data from
   - `params` - url params, query params, or attributes to filter by in baobab
@@ -93,32 +95,34 @@ It's designed to be used with [cerebral](https://github.com/christianalfoni/cere
   ```
   
   - Using a baobab path `'conversations'`:
-  ```js
+    ```js
     let config = { conversations: {mapping: 'http://app.com/api/v1/conversations'} }
     cachejax.get('conversations') // => baobab.get('conversations') or GET /api/v1/conversations 
-  ```
+    ```
   
-  - baobab path with URL param:
-  ```js
+  - baobab path with URL param (express.js style routes):
+    ```js
     let config = { conversations: {mapping: 'http://app.com/api/v1/conversations:id'} }
     cachejax.get('conversations', {id: 3}) // => baobab.get('conversations') or GET /api/v1/conversations/3
-  ```
+    ```
   
   - baobab path with query param:
-  ```js
+    ```js
     let config = { conversations: {mapping: 'http://app.com/api/v1/conversations'} }
     cachejax.get('conversations', {id: 3} // => baobab.get('conversations') or GET /api/v1/conversations?id=3
-  ```
+    ```
   - Normal AJAX call:
-  ```js
+    
+    ```js
     cachejax.get('http://www.google.com');
-  ```
+    ```
+
 
 - #### cachejax.batch([data], mappingFunction) => [Promise]
 
-  - `data` - an array of data, e.g. user_ids
+  - `[data]` - an array of data, e.g. user_ids
   - `mappingFunction` - a function mapping data to a Request (Promise)
-  - Returns: an array of fulfilled Promises
+  - `[Promise]`: an array of fulfilled Promises
 
   Given the config:
   ```js
