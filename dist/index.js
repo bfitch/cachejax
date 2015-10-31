@@ -78,152 +78,155 @@ module.exports =
 	var _pathToRegexp2 = _interopRequireDefault(_pathToRegexp);
 	
 	function Cachejax(model, config) {
-	  return {
-	    get: function get(path) {
-	      var params = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-	      var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-	      var extraParams = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
+	  var axios = arguments.length <= 2 || arguments[2] === undefined ? axios : arguments[2];
+	  return (function () {
+	    return {
+	      get: function get(path) {
+	        var params = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+	        var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+	        var extraParams = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
 	
-	      this.path = path;
-	      var forceFetch = options.forceFetch || false;
-	      var data = cachedData(path, model, params, config);
+	        this.path = path;
+	        var forceFetch = options.forceFetch || false;
+	        var data = cachedData(path, model, params, config);
 	
-	      if (data && (data.length || _Object$keys(data).length) && !forceFetch) {
-	        console.log('CACHE - ' + path);
+	        if (data && (data.length || _Object$keys(data).length) && !forceFetch) {
+	          // console.log(`CACHE - ${path}`);
 	
-	        return new _Promise(function (resolve, reject) {
-	          return resolve(cachedResponse(path, config, options, data));
+	          return new _Promise(function (resolve, reject) {
+	            return resolve(cachedResponse(path, config, options, data));
+	          });
+	        } else {
+	          // console.log(`FETCH - ${path}`);
+	
+	          return axios.get.apply(axios, _toConsumableArray(request(path, params, config, extraParams)));
+	        }
+	      },
+	
+	      batch: function batch(collection, request) {
+	        var _this = this;
+	
+	        var promises = collection.map(request);
+	
+	        return axios.all(promises).then(function (responses) {
+	          var root = rootConfig(_this.path, config);
+	          return responses.map(function (res) {
+	            return res.data[root];
+	          });
 	        });
-	      } else {
-	        console.log('FETCH - ' + path);
+	      },
 	
-	        return _axios2['default'].get.apply(_axios2['default'], _toConsumableArray(request(path, params, config, extraParams)));
+	      setAuthorization: function setAuthorization(token) {
+	        axios.interceptors.request.use(function (axiosConfig) {
+	          axiosConfig.headers = { 'Authorization': 'Bearer ' + token };
+	          return axiosConfig;
+	        });
+	      },
+	
+	      // axios proxy methods
+	      all: function all() {
+	        return axios.all.apply(axios, arguments);
+	      },
+	      'delete': function _delete() {
+	        return axios['delete'].apply(axios, arguments);
+	      },
+	      head: function head() {
+	        return axios.head.apply(axios, arguments);
+	      },
+	      post: function post() {
+	        return axios.post.apply(axios, arguments);
+	      },
+	      put: function put() {
+	        return axios.put.apply(axios, arguments);
+	      },
+	      patch: function patch() {
+	        return axios.patch.apply(axios, arguments);
 	      }
-	    },
-	
-	    batch: function batch(collection, request) {
-	      var _this = this;
-	
-	      var promises = collection.map(request);
-	
-	      return _axios2['default'].all(promises).then(function (responses) {
-	        var root = rootConfig(_this.path, config);
-	        return responses.map(function (res) {
-	          return res.data[root];
-	        });
-	      });
-	    },
-	
-	    setAuthorization: function setAuthorization(token) {
-	      _axios2['default'].interceptors.request.use(function (axiosConfig) {
-	        axiosConfig.headers = { 'Authorization': 'Bearer ' + token };
-	        return axiosConfig;
-	      });
-	    },
-	
-	    // axios proxy methods
-	    all: function all() {
-	      return _axios2['default'].all.apply(_axios2['default'], arguments);
-	    },
-	    'delete': function _delete() {
-	      return _axios2['default']['delete'].apply(_axios2['default'], arguments);
-	    },
-	    head: function head() {
-	      return _axios2['default'].head.apply(_axios2['default'], arguments);
-	    },
-	    post: function post() {
-	      return _axios2['default'].post.apply(_axios2['default'], arguments);
-	    },
-	    put: function put() {
-	      return _axios2['default'].put.apply(_axios2['default'], arguments);
-	    },
-	    patch: function patch() {
-	      return _axios2['default'].patch.apply(_axios2['default'], arguments);
-	    }
-	  };
-	
-	  function cachedData(path, model, params, config) {
-	    var attr = _Object$keys(params)[0];
-	    var value = params[attr];
-	    var data = model.get(path);
-	
-	    // is this an array?, is it empty?, is param in the first object in the array?
-	    if (Array.isArray(data) && data.length && data[0][attr] != undefined) {
-	
-	      // TODO: check cached data by all params (attrs) passed in, not just first!
-	      var _cachedData = data.filter(function (item) {
-	        return item[attr] === value;
-	      });
-	
-	      return baseConfig(path, config).batch ? _cachedData[0] : _cachedData;
-	    } else {
-	      return data;
-	    }
-	  }
-	
-	  function cachedResponse(path, config, options, data) {
-	    var root = rootConfig(path, config, options);
-	    return root ? { data: _defineProperty({}, root, data) } : { data: data };
-	  }
-	
-	  function request(path, params, config, extraParams) {
-	    var mappedUrl = baseConfig(path, config).mapping;
-	
-	    if (isExpressStyleRoute(mappedUrl)) {
-	      // (/conversations/:id', {id: 1})
-	      var toPath = _pathToRegexp2['default'].compile(mappedUrl);
-	      var query = _Object$keys(extraParams).length ? { params: extraParams } : {};
-	      return [toPath(params), query];
-	    } else if (mappedUrl) {
-	      // ('convesations', {id: 1})
-	      return [mappedUrl, merge({ params: params }, extraParams)];
-	    } else {
-	      // ('http://app.com/conversations', {id: 1})
-	      return [path, merge({ params: params }, extraParams)];
-	    }
-	  }
-	
-	  function isExpressStyleRoute(url) {
-	    return (/:\w/.test(url)
-	    );
-	  }
-	
-	  function baseConfig(path, config) {
-	    var nullConfig = {
-	      root: undefined,
-	      mapping: undefined,
-	      batch: undefined
 	    };
-	    return config[path] || nullConfig;
-	  }
 	
-	  function rootConfig(path, config) {
-	    var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+	    function cachedData(path, model, params, config) {
+	      var attr = _Object$keys(params)[0];
+	      var value = params[attr];
+	      var data = model.get(path);
 	
-	    if (options.root && typeof options.root === 'string') {
-	      // passed in at call time: cachejax.get('', {root: 'foo'})
-	      return options.root;
-	    } else if (options.root && typeof options.root === 'boolean' && !options.root) {
-	      // passed in at call time: cachejax.get('', {root: false})
-	      return false;
-	    } else if (typeof baseConfig(path, config).root === 'string') {
-	      // base config: Cachejax(model, {'currentUser': {root: 'foo'}})
-	      return baseConfig(path, config).root;
-	    } else if (typeof baseConfig(path, config).root === 'boolean' && !baseConfig(path, config).root) {
-	      // base config: Cachejax(model, {'currentUser': {root: false}})
-	      return false;
-	    } else if (typeof baseConfig(path, config).root === 'undefined') {
-	      // base config: Cachejax(model, {'currentUser': {})
-	      return path;
+	      // is this an array?, is it empty?, is param in the first object in the array?
+	      if (Array.isArray(data) && data.length && data[0][attr] != undefined) {
+	
+	        // TODO: check cached data by all params (attrs) passed in, not just first!
+	        var _cachedData = data.filter(function (item) {
+	          return item[attr] === value;
+	        });
+	
+	        return baseConfig(path, config).batch ? _cachedData[0] : _cachedData;
+	      } else {
+	        return data;
+	      }
 	    }
-	  }
 	
-	  function merge(obj, objToCopy) {
-	    _Object$keys(objToCopy).forEach(function (key) {
-	      obj[key] = objToCopy[key];
-	    });
-	    return obj;
-	  }
+	    function cachedResponse(path, config, options, data) {
+	      var root = rootConfig(path, config, options);
+	      return root ? { data: _defineProperty({}, root, data) } : { data: data };
+	    }
+	
+	    function request(path, params, config, extraParams) {
+	      var mappedUrl = baseConfig(path, config).mapping;
+	
+	      if (isExpressStyleRoute(mappedUrl)) {
+	        // (/conversations/:id', {id: 1})
+	        var toPath = _pathToRegexp2['default'].compile(mappedUrl);
+	        var query = _Object$keys(extraParams).length ? { params: extraParams } : {};
+	        return [toPath(params), query];
+	      } else if (mappedUrl) {
+	        // ('convesations', {id: 1})
+	        return [mappedUrl, merge({ params: params }, extraParams)];
+	      } else {
+	        // ('http://app.com/conversations', {id: 1})
+	        return [path, merge({ params: params }, extraParams)];
+	      }
+	    }
+	
+	    function isExpressStyleRoute(url) {
+	      return (/:\w/.test(url)
+	      );
+	    }
+	
+	    function baseConfig(path, config) {
+	      var nullConfig = {
+	        root: undefined,
+	        mapping: undefined,
+	        batch: undefined
+	      };
+	      return config[path] || nullConfig;
+	    }
+	
+	    function rootConfig(path, config) {
+	      var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+	
+	      if (options.root && typeof options.root === 'string') {
+	        // passed in at call time: cachejax.get('', {root: 'foo'})
+	        return options.root;
+	      } else if (options.root && typeof options.root === 'boolean' && !options.root) {
+	        // passed in at call time: cachejax.get('', {root: false})
+	        return false;
+	      } else if (typeof baseConfig(path, config).root === 'string') {
+	        // base config: Cachejax(model, {'currentUser': {root: 'foo'}})
+	        return baseConfig(path, config).root;
+	      } else if (typeof baseConfig(path, config).root === 'boolean' && !baseConfig(path, config).root) {
+	        // base config: Cachejax(model, {'currentUser': {root: false}})
+	        return false;
+	      } else if (typeof baseConfig(path, config).root === 'undefined') {
+	        // base config: Cachejax(model, {'currentUser': {})
+	        return path;
+	      }
+	    }
+	
+	    function merge(obj, objToCopy) {
+	      _Object$keys(objToCopy).forEach(function (key) {
+	        obj[key] = objToCopy[key];
+	      });
+	      return obj;
+	    }
+	  })();
 	}
 	
 	module.exports = exports['default'];
