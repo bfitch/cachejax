@@ -9,14 +9,14 @@ export default function Cachejax(model, config, axios=axios) {
       const data       = cachedData(path, model, params, config);
 
       if (data && (data.length || Object.keys(data).length) && !forceFetch) {
-        // console.log(`CACHE - ${path}`);
+        console.log(`CACHE - ${path}`);
 
         return new Promise((resolve, reject) => {
           return resolve(cachedResponse(path, config, options, data));
         });
 
       } else {
-        // console.log(`FETCH - ${path}`);
+        console.log(`FETCH - ${path}`);
 
         return axios.get(...request(path, params, config, extraParams));
       }
