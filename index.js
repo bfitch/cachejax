@@ -1,7 +1,7 @@
-import axios from 'axios';
+import ajax from 'axios';
 import pathToRegexp from 'path-to-regexp';
 
-export default function Cachejax(model, config, axios=axios) {
+export default function Cachejax(model, config, axios=ajax) {
   return {
     get: function(path, params={}, options={}, extraParams={}) {
       this.path        = path;
